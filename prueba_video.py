@@ -11,6 +11,9 @@ model = YOLO("yolo11n.pt")
 video_path = "oficina.mp4"
 cap = cv2.VideoCapture(video_path)
 
+new_width = 460
+new_height = 300
+
 # Verificar que el video se haya abierto correctamente
 if not cap.isOpened():
     print("Error al abrir el video.")
@@ -24,10 +27,10 @@ while True:
 
     results = model.predict(frame, conf = 0.85)            # Aplicar el modelo al frame, para que muestre solo a los de confianza > 0,85
 
-    for result in results:             # Iterar sobre los resultados (normalmente uno por frame)
-        frame = result.plot()          # Dibuja las cajas y etiquetas sobre el frame
+    frame = results[0].plot()          # Dibuja las cajas y etiquetas sobre el frame
+    resized_image = cv2.resize(frame, (new_width, new_height))
 
-    cv2.imshow("Detección YOLO", frame)  # Mostrar el frame con las detecciones
+    cv2.imshow("Deteccion YOLO", resized_image)  # Mostrar el frame con las detecciones
 
     # Presionar 'q' para salir del video
     if cv2.waitKey(1) & 0xFF == ord('q'):
